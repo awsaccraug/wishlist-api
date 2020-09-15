@@ -34,7 +34,7 @@ class WisherController extends Controller
     public function getUser($id)
     {
         $wisher = Wisher::find($id)->first();
-        if(!$wisher) {
+        if (!$wisher) {
             return $this->response($this->notfoundStatusCode, $this->notfoundMessage, []);
         }
         return $this->response($this->okStatusCode, $this->okMessage, $wisher);
@@ -43,12 +43,12 @@ class WisherController extends Controller
     {
         try {
             $wisher = Wisher::find($id)->first();
-        if(!$wisher) {
-            return $this->response($this->notfoundStatusCode, $this->notfoundMessage, []);
-        }
-        $wisher->update($request->all());
-        return $this->response($this->okStatusCode, $this->okMessage, $wisher);
-        } catch(\Exception $e) {
+            if (!$wisher) {
+                return $this->response($this->notfoundStatusCode, $this->notfoundMessage, []);
+            }
+            $wisher->update($request->all());
+            return $this->response($this->okStatusCode, $this->okMessage, $wisher);
+        } catch (\Exception $e) {
             return $this->response($this->serverErrorStatusCode, $this->serverErrorMessage, []);
             Log::warning(['Exception => ' => $e->getMessage()]);
         }
@@ -57,61 +57,54 @@ class WisherController extends Controller
     {
         try {
             Wisher::destroy($id);
-        return $this->response($this->deletedStatusCode, $this->deletedMessage, []);
-        }catch(\Exception $e) {
+            return $this->response($this->deletedStatusCode, $this->deletedMessage, []);
+        } catch (\Exception $e) {
             return $this->response($this->serverErrorStatusCode, $this->serverErrorMessage, []);
             Log::warning(['Exception => ' => $e->getMessage()]);
         }
-
     }
     public function login(Request $request)
     {
         try {
             $validatedData = $this->validator($request, 'login');
-        if($validatedData->fails()) {
-            return $this->response($this->errorStatusCode, $this->errorMessage, $validatedData->errors());
-        }
-        $wisher = Wisher::where('email', $request->email)->first();
-        if(!$wisher) {
-            return $this->response($this->notfoundStatusCode, $this->notfoundMessage, []);
-        }
-        if(Hash::check($request->password, $wisher->password)) {
-            $wisher->api_token = Str::random(40);
-            $wisher->save();
-            return $this->response($this->okStatusCode, $this->okMessage, $wisher);
-        }
-        } catch(\Exception $e) {
+            if ($validatedData->fails()) {
+                return $this->response($this->errorStatusCode, $this->errorMessage, $validatedData->errors());
+            }
+            $wisher = Wisher::where('username', $request->username)->first();
+            if (!$wisher) {
+                return $this->response($this->notfoundStatusCode, $this->notfoundMessage, []);
+            }
+            if (Hash::check($request->password, $wisher->password)) {
+                $wisher->api_token = Str::random(40);
+                $wisher->save();
+                return $this->response($this->okStatusCode, $this->okMessage, $wisher);
+            }
+        } catch (\Exception $e) {
             return $this->response($this->serverErrorStatusCode, $this->serverErrorMessage, []);
             Log::warning(['Exception => ' => $e->getMessage()]);
-        } catch (QueryException $e){
-            Log::debug($e->getCode());
-            $errorCode = $e->errorInfo[1];
-            if($errorCode == 1062){
-               return $this->response($errorCode, 'The details provided already exists', []);
-            }
         }
     }
     public function register(Request $request)
     {
         try {
             $validatedData = $this->validator($request, 'register');
-        if($validatedData->fails()) {
-            return $this->response($this->errorStatusCode, $this->errorMessage, $validatedData->errors());
-        }
+            if ($validatedData->fails()) {
+                return $this->response($this->errorStatusCode, $this->errorMessage, $validatedData->errors());
+            }
             $wisher = Wisher::create([
-            'email' => $request['email'],
-            'password' => Hash::make($request['password']),
+                'username' => $request['username'],
+                'password' => Hash::make($request['password']),
             ]);
-            if($wisher) {
+            if ($wisher) {
                 return $this->login($request);
             }
-        } catch (QueryException $e){
+        } catch (QueryException $e) {
             Log::warning(['Error => ' => $e->getMessage()]);
             $errorCode = $e->errorInfo[1];
-            if($errorCode == 1062){
-               return $this->response($errorCode, 'The details provided matches an existing user', []);
+            if ($errorCode == 1062) {
+                return $this->response($errorCode, 'The username has already been taken', []);
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Log::warning(['Exception =>' => $e->getMessage()]);
             return $this->response($this->serverErrorStatusCode, $this->serverErrorMessage, []);
         }

@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Wish extends Model
@@ -12,7 +13,7 @@ class Wish extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'due_date', 'wisher_id'
+        'title', 'due_date', 'cover_photo', 'wisher_id'
     ];
 
     /**
@@ -21,7 +22,8 @@ class Wish extends Model
      * @var array
      */
 
-    public function wisher() {
+    public function wisher()
+    {
         return $this->belongsTo('App\Wisher');
     }
 }

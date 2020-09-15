@@ -9,6 +9,7 @@ use App\Wishes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class WishController extends Controller
 {
@@ -54,7 +55,8 @@ class WishController extends Controller
     public function addWish(Request $request)
     {
         try {
-            $wish = Wish::create(array_merge($request->all(), ['wisher_id' => Auth::id()]));
+            $path = $this->storeUploadedFile($request);
+            $wish = Wish::create(array_merge($request->all(), ['wisher_id' => Auth::id(), 'cover_photo' => $path]));
             if ($wish) {
                 return $this->response($this->createdStatusCode, $this->createdMessage, $wish);
             }
@@ -70,7 +72,8 @@ class WishController extends Controller
             if (!$wish) {
                 return $this->response($this->notfoundStatusCode, $this->notfoundMessage, []);
             }
-            $wish->update($request->except('api_token'));
+            $path = $this->updateUploadedFile($request);
+            $wish->update(array_merge($request->except('api_token'), ['cover_photo' => $path]));
             return $this->response($this->okStatusCode, $this->okMessage, $wish);
         } catch (\Exception $e) {
             return $this->response($this->serverErrorStatusCode, $this->serverErrorMessage, []);
@@ -85,6 +88,22 @@ class WishController extends Controller
         } catch (\Exception $e) {
             return $this->response($this->serverErrorStatusCode, $this->serverErrorMessage, []);
             Log::warning(['Exception => ' => $e->getMessage()]);
+        }
+    }
+    protected function storeUploadedFile(Request $request)
+    {
+        $path = $request->hasFile('cover_photo') ? $request->file('cover_photo')->store('wishes', 's3') : "";
+        return Storage::disk('s3')->url($path);
+    }
+    protected function updateUploadedFile(Request $request)
+    {
+        // $this->removeExistingFile($request);
+        return !$request->hasFile('cover_photo') && $request->path ? $request->path : $this->storeUploadedFile($request);
+    }
+    protected function removeExistingFile(Request $request)
+    {
+        if ($request->hasFile('cover_photo') && $request->path) {
+            Storage::disk('s3')->exists($request->path) ? Storage::disk('s3')->delete($request->path) : "";
         }
     }
 

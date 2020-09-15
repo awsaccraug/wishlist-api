@@ -18,7 +18,7 @@ class Wisher extends Model implements AuthenticatableContract, AuthorizableContr
      * @var array
      */
     protected $fillable = [
-        'email', 'password'
+        'username', 'password'
     ];
 
     /**
@@ -30,7 +30,8 @@ class Wisher extends Model implements AuthenticatableContract, AuthorizableContr
         'password',
     ];
 
-    public function wishes() {
+    public function wishes()
+    {
         return $this->hasMany('App\Wish');
     }
 }

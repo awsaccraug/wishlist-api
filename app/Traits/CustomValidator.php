@@ -13,8 +13,8 @@ trait CustomValidator
         switch (strtolower($action)) {
             case 'register':
                 $this->validationRules = [
-                    'email' => 'required|string| email',
-                    'password' => 'required|string|confirmed|min:8|unique:wishers',
+                    'username' => 'required|string|unique:wishers|min:2',
+                    'password' => 'required|string|confirmed|min:8',
                 ];
                 $this->custValidator = Validator::make($request->all(), $this->validationRules);
                 break;
@@ -33,7 +33,7 @@ trait CustomValidator
                 break;
             case 'login':
                 $this->validationRules = [
-                    'email' => 'required',
+                    'username' => 'required',
                     'password' => 'required'
                 ];
                 $this->custValidator = Validator::make($request->all(), $this->validationRules);
