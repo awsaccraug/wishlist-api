@@ -10,8 +10,12 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
+
+use Illuminate\Support\Facades\Log;
+
 $router->get('test', function () {
-    return 'Hello from wishlist api';
+    Log::info('Testing logs');
+    return 'Testing logs';
 });
 $router->group(['prefix' => 'api'], function ($router) {
     $router->post('login', 'WisherController@login');
@@ -28,7 +32,7 @@ $router->group(['prefix' => 'api'], function ($router) {
         $router->get('wisher_wishes', 'WishController@getWishesForWisher');
         $router->post('wishes', 'WishController@addWish');
         $router->get('wishes/{id}', 'WishController@getWish');
-        $router->put('wishes/{id}', 'WishController@update');
+        $router->post('wishes/{id}', 'WishController@update');
         $router->delete('wishes/{id}', 'WishController@delete');
     });
 });

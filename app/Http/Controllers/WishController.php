@@ -83,7 +83,13 @@ class WishController extends Controller
     public function delete($id)
     {
         try {
+            $wish = Wish::where('id', $id)->first();
+            if (!$wish) {
+                return $this->response($this->notfoundStatusCode, $this->notfoundMessage, []);
+            }
+            $coverPhoto = $wish->cover_photo;
             Wish::destroy($id);
+            $coverPhoto ? Storage::disk('s3')->delete($coverPhoto) : "";
             return $this->response($this->deletedStatusCode, $this->deletedMessage, []);
         } catch (\Exception $e) {
             return $this->response($this->serverErrorStatusCode, $this->serverErrorMessage, []);
@@ -92,20 +98,20 @@ class WishController extends Controller
     }
     protected function storeUploadedFile(Request $request)
     {
-        $path = $request->hasFile('cover_photo') ? $request->file('cover_photo')->store('wishes', 's3') : "";
-        return Storage::disk('s3')->url($path);
+        if ($request->hasFile('cover_photo')) {
+            return $request->file('cover_photo')->store('wishes', 's3');
+        }
     }
     protected function updateUploadedFile(Request $request)
     {
-        // $this->removeExistingFile($request);
+        $this->removeExistingFile($request);
         return !$request->hasFile('cover_photo') && $request->path ? $request->path : $this->storeUploadedFile($request);
     }
     protected function removeExistingFile(Request $request)
     {
         if ($request->hasFile('cover_photo') && $request->path) {
+            Log::info('get');
             Storage::disk('s3')->exists($request->path) ? Storage::disk('s3')->delete($request->path) : "";
         }
     }
-
-    //
 }

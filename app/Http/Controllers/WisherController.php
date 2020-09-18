@@ -92,8 +92,9 @@ class WisherController extends Controller
                 return $this->response($this->errorStatusCode, $this->errorMessage, $validatedData->errors());
             }
             $wisher = Wisher::create([
-                'username' => $request['username'],
-                'password' => Hash::make($request['password']),
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
             ]);
             if ($wisher) {
                 return $this->login($request);
