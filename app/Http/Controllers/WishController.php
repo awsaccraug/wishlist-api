@@ -110,7 +110,6 @@ class WishController extends Controller
     protected function removeExistingFile(Request $request)
     {
         if ($request->hasFile('cover_photo') && $request->path) {
-            Log::info('get');
             Storage::disk('s3')->exists($request->path) ? Storage::disk('s3')->delete($request->path) : "";
         }
     }

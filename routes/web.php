@@ -27,8 +27,9 @@ $router->group(['prefix' => 'api'], function ($router) {
     $router->group(['middleware' => 'auth'], function ($router) {
         $router->get('wishers', 'WisherController@index');
         $router->get('wishers/{id}', 'WisherController@getUser');
-        $router->put('wishers/{id}', 'WisherController@update');
+        $router->post('wishers/{id}', 'WisherController@update');
         $router->delete('wishers/{id}', 'WisherController@delete');
+        $router->delete('remove_profile_photo/{id}', 'WisherController@removeProfilePhoto');
         $router->get('wisher_wishes', 'WishController@getWishesForWisher');
         $router->post('wishes', 'WishController@addWish');
         $router->get('wishes/{id}', 'WishController@getWish');

@@ -18,7 +18,7 @@ class Wisher extends Model implements AuthenticatableContract, AuthorizableContr
      * @var array
      */
     protected $fillable = [
-        'username', 'email', 'password'
+        'username', 'email', 'password', 'profile_photo'
     ];
 
     /**
