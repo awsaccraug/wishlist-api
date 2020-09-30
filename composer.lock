@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "137d001e6124445cf86d1e0fa2fe2e80",
+    "content-hash": "b34e38f2d6fff201a6590bb9be4af48d",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -886,7 +886,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v6.18.40",
+            "version": "v6.18.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -1476,7 +1476,7 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v6.18.40",
+            "version": "v6.18.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
@@ -2318,60 +2318,6 @@
                 "serialize"
             ],
             "time": "2020-09-06T17:02:15+00:00"
-        },
-        {
-            "name": "pagevamp/laravel-cloudwatch-logs",
-            "version": "0.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/pagevamp/laravel-cloudwatch-logs.git",
-                "reference": "cf4b6ba822bf743b0b0071b32d406ccc619388d5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/pagevamp/laravel-cloudwatch-logs/zipball/cf4b6ba822bf743b0b0071b32d406ccc619388d5",
-                "reference": "cf4b6ba822bf743b0b0071b32d406ccc619388d5",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "^5.1 || ^6.0 || ^7.0",
-                "maxbanton/cwh": "^1.1.14 || ^2.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.12 || ^2.16",
-                "mockery/mockery": "^1.2",
-                "phpunit/phpunit": "^6.5 || ^8.4 || ^9.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Pagevamp\\Providers\\CloudWatchServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Pagevamp\\": "src/",
-                    "Tests\\": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Naren Chitrakar",
-                    "email": "developer.naren@gmail.com"
-                },
-                {
-                    "name": "Sujan Shrestha",
-                    "email": "najus.shrestha@gmail.com"
-                }
-            ],
-            "description": "Laravel Adapter for AWS CloudWatch",
-            "time": "2020-04-28T07:15:50+00:00"
         },
         {
             "name": "paragonie/random_compat",
