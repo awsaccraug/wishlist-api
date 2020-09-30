@@ -13,11 +13,13 @@
 
 use Illuminate\Support\Facades\Log;
 
-$router->get('test', function () {
-    Log::info('Testing logs');
-    return 'Testing logs';
-});
 $router->group(['prefix' => 'api'], function ($router) {
+    $router->get('test', function () {
+        $msg = 'API Test Success!';
+        Log::info($msg);
+        return $msg;
+    });
+
     $router->post('login', 'WisherController@login');
     $router->post('register', 'WisherController@register');
 

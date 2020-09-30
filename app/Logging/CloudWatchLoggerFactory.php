@@ -4,7 +4,11 @@ namespace App\Logging;
 
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Maxbanton\Cwh\Handler\CloudWatch;
+use Monolog\Formatter\JsonFormatter;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Logger;
+use Monolog\Processor\IntrospectionProcessor;
+use Monolog\Processor\WebProcessor;
 
 class CloudWatchLoggerFactory
 {
@@ -16,6 +20,9 @@ class CloudWatchLoggerFactory
      */
     public function __invoke(array $config)
     {
+
+        // @session_start;
+        $_SESSION['requestId'] = uniqid('', true);
         $sdkParams = $config["sdk"];
         $tags = $config["tags"] ?? [];
         $name = $config["name"] ?? 'cloudwatch';
@@ -24,16 +31,25 @@ class CloudWatchLoggerFactory
         $client = new CloudWatchLogsClient($sdkParams);
 
         // Log group name, will be created if none
-        $groupName = config('app.name') . '-' . config('app.env');
+        $groupName = $config['group_name'];
 
         // Log stream name, will be created if none
-        $streamName = config('app.hostname');
+        $streamName = $config['stream_name'];
 
         // Days to keep logs, 14 by default. Set to `null` to allow indefinite retention.
         $retentionDays = $config["retention"];
 
         // Instantiate handler (tags are optional)
         $handler = new CloudWatch($client, $groupName, $streamName, $retentionDays, 10000, $tags);
+
+        $amazonFormatter = new LineFormatter("%channel%: %level_name%: %message% %context% %extra%", null, false, true);
+        $handler->setFormatter(new JsonFormatter());
+        $handler->pushProcessor(new IntrospectionProcessor(Logger::API, ["Illuminate\\"]));
+        $handler->pushProcessor(new WebProcessor());
+        $handler->pushProcessor(function ($entry) {
+            $entry['extra']['requestId'] = @$_SESSION['requestId'];
+            return $entry;
+        });
 
         // Create a log channel
         $logger = new Logger($name);
