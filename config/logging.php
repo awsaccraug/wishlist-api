@@ -93,16 +93,16 @@ return [
             'driver' => 'custom',
             'via' => \App\Logging\CloudWatchLoggerFactory::class,
             'sdk' => [
-                'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
-                'version' => env('AWS_DEFAULT_VERSION', 'latest'),
+                'region' => env('AWS_CLOUD_WATCH_REGION', 'eu-west-1'),
+                'version' => env('AWS_CLOUD_WATCH_VERSION', 'latest'),
                 'credentials' => [
-                    'key' => env('AWS_ACCESS_KEY_ID'),
-                    'secret' => env('AWS_SECRET_ACCESS_KEY')
+                    'key' => env('AWS_CLOUD_WATCH_KEY'),
+                    'secret' => env('AWS_CLOUD_WATCH_SECRET')
                 ]
             ],
-            'stream_name' => env('CLOUDWATCH_STREAM_NAME'),
-            'group_name' => env('CLOUDWATCH_GROUP_NAME'),
-            'retention' => env('CLOUDWATCH_LOG_RETENTION', 30),
+            'stream_name' => env('AWS_CLOUD_WATCH_STREAM_NAME'),
+            'group_name' => env('AWS_CLOUD_WATCH_GROUP_NAME'),
+            'retention' => env('AWS_CLOUD_WATCH_RETENTION_DAYS', 30),
             'formatter' => JsonFormatter::class,
         ],
 
