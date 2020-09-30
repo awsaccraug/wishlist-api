@@ -52,7 +52,7 @@ class WisherController extends Controller
             return $this->response($this->okStatusCode, $this->okMessage, $wisher);
         } catch (\Exception $e) {
             return $this->response($this->serverErrorStatusCode, $this->serverErrorMessage, []);
-            Log::warning(['Exception => ' => $e->getMessage()]);
+            Log::warning('Exception => ', [$e->getMessage()]);
         }
     }
     public function delete($id)
@@ -62,7 +62,7 @@ class WisherController extends Controller
             return $this->response($this->deletedStatusCode, $this->deletedMessage, []);
         } catch (\Exception $e) {
             return $this->response($this->serverErrorStatusCode, $this->serverErrorMessage, []);
-            Log::warning(['Exception => ' => $e->getMessage()]);
+            Log::warning('Exception => ', [$e->getMessage()]);
         }
     }
     public function removeProfilePhoto($id)
@@ -76,7 +76,7 @@ class WisherController extends Controller
             return $this->response($this->okStatusCode, $this->okMessage, $wisher);
         } catch (\Exception $e) {
             return $this->response($this->serverErrorStatusCode, $this->serverErrorMessage, []);
-            Log::warning(['Exception => ' => $e->getMessage()]);
+            Log::warning('Exception => ', [$e->getMessage()]);
         }
     }
 
@@ -94,11 +94,12 @@ class WisherController extends Controller
             if (Hash::check($request->password, $wisher->password)) {
                 $wisher->api_token = Str::random(40);
                 $wisher->save();
+                Log::info('user logged in', [$wisher]);
                 return $this->response($this->okStatusCode, $this->okMessage, $wisher);
             }
         } catch (\Exception $e) {
             return $this->response($this->serverErrorStatusCode, $this->serverErrorMessage, []);
-            Log::warning(['Exception => ' => $e->getMessage()]);
+            Log::warning('Exception => ', [$e->getMessage()]);
         }
     }
     public function register(Request $request)
@@ -116,6 +117,7 @@ class WisherController extends Controller
                 'profile_photo' => $path
             ]);
             if ($wisher) {
+                Log::info('user registered', [$wisher]);
                 return $this->login($request);
             }
         } catch (QueryException $e) {
@@ -125,7 +127,7 @@ class WisherController extends Controller
                 return $this->response($errorCode, 'The username has already been taken', []);
             }
         } catch (Exception $e) {
-            Log::warning(['Exception =>' => $e->getMessage()]);
+            Log::warning('Exception => ', [$e->getMessage()]);
             return $this->response($this->serverErrorStatusCode, $this->serverErrorMessage, []);
         }
     }
