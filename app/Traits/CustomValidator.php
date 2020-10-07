@@ -38,6 +38,25 @@ trait CustomValidator
                 ];
                 $this->custValidator = Validator::make($request->all(), $this->validationRules);
                 break;
+            case 'search wish':
+                $this->validationRules = [
+                    'title' => 'required'
+                ];
+                $this->custValidator = Validator::make($request->all(), $this->validationRules);
+                break;
+            case 'add wish':
+                $this->validationRules = [
+                    'title' => 'required|min:5',
+                    'due_date' => 'required|date'
+                ];
+                $this->custValidator = Validator::make($request->all(), $this->validationRules);
+                break;
+            case 'update wisher':
+                $this->validationRules = [
+                    'username' => 'required|string|unique:wishers|min:2',
+                ];
+                $this->custValidator = Validator::make($request->all(), $this->validationRules);
+                break;
 
             default:
                 # code...

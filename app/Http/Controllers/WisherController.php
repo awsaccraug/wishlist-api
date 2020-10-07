@@ -47,6 +47,10 @@ class WisherController extends Controller
             if (!$wisher) {
                 return $this->response($this->notfoundStatusCode, $this->notfoundMessage, []);
             }
+            $validatedData = $this->validator($request, 'update wisher');
+            if ($validatedData->fails()) {
+                return $this->response($this->errorStatusCode, $this->errorMessage, $validatedData->messages()->all());
+            }
             $path = $this->updateUploadedFile($request);
             $wisher->update(array_merge($request->except('api_token'), ['profile_photo' => $path]));
             return $this->response($this->okStatusCode, $this->okMessage, $wisher);
@@ -85,7 +89,7 @@ class WisherController extends Controller
         try {
             $validatedData = $this->validator($request, 'login');
             if ($validatedData->fails()) {
-                return $this->response($this->errorStatusCode, $this->errorMessage, $validatedData->errors());
+                return $this->response($this->errorStatusCode, $this->errorMessage, $validatedData->messages()->all());
             }
             $wisher = Wisher::where('username', $request->username)->first();
             if (!$wisher) {

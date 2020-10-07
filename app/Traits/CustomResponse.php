@@ -12,7 +12,7 @@ trait CustomResponse
 
     protected $updatedMessage = 'Updated';
 
-    protected $deletedMessage = 'No Content';
+    protected $deletedMessage = 'Deleted';
     protected $deletedStatusCode = 204;
 
     protected $errorMessage = 'An Error Occurred';

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Todo;
 use App\Traits\CustomResponse;
+use App\Traits\CustomValidator;
 use App\Wish;
-use App\Wishes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -13,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class WishController extends Controller
 {
-    use CustomResponse;
+    use CustomResponse, CustomValidator;
     /**
      * Create a new controller instance.
      *
@@ -36,6 +35,10 @@ class WishController extends Controller
     }
     public function search(Request $request)
     {
+        $validatedData = $this->validator($request, 'search wish');
+        if ($validatedData->fails()) {
+            return $this->response($this->errorStatusCode, $this->errorMessage, $validatedData->messages()->all());
+        }
         $wishes = Wish::where('title', 'LIKE', '%' . $request->title . '%')->with('wisher')->latest()->get();
         return $this->response($this->okStatusCode, $this->okMessage, $wishes);
     }
@@ -55,6 +58,10 @@ class WishController extends Controller
     public function addWish(Request $request)
     {
         try {
+            $validatedData = $this->validator($request, 'add wish');
+            if ($validatedData->fails()) {
+                return $this->response($this->errorStatusCode, $this->errorMessage, $validatedData->messages()->all());
+            }
             $path = $this->storeUploadedFile($request);
             $wish = Wish::create(array_merge($request->all(), ['wisher_id' => Auth::id(), 'cover_photo' => $path]));
             if ($wish) {
@@ -68,6 +75,10 @@ class WishController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            $validatedData = $this->validator($request, 'add wish');
+            if ($validatedData->fails()) {
+                return $this->response($this->errorStatusCode, $this->errorMessage, $validatedData->messages()->all());
+            }
             $wish = Wish::where('id', $id)->first();
             if (!$wish) {
                 return $this->response($this->notfoundStatusCode, $this->notfoundMessage, []);
