@@ -34,7 +34,7 @@ class WisherController extends Controller
     }
     public function getUser($id)
     {
-        $wisher = Wisher::find($id)->first();
+        $wisher = Wisher::find($id);
         if (!$wisher) {
             return $this->response($this->notfoundStatusCode, $this->notfoundMessage, []);
         }
