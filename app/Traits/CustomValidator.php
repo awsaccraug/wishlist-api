@@ -18,19 +18,6 @@ trait CustomValidator
                 ];
                 $this->custValidator = Validator::make($request->all(), $this->validationRules);
                 break;
-            case 'store':
-                $this->validationRules = [
-                    'content' => 'required',
-                    'name' => 'required'
-                ];
-                $this->custValidator = Validator::make($request->all(), $this->validationRules);
-                break;
-            case 'update':
-                $this->validationRules = [
-                    'content' => 'required'
-                ];
-                $this->custValidator = Validator::make($request->all(), $this->validationRules);
-                break;
             case 'login':
                 $this->validationRules = [
                     'username' => 'required',
